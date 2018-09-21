@@ -162,6 +162,7 @@ int main() {
     resyncClock();
 
     fifoInit();
+    touchInit();
 
     while (!fifoCheckValue32(FIFO_USER_03));
     sharedData = (SharedData*)(fifoGetValue32(FIFO_USER_03) | 0x02000000);

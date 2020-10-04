@@ -30,16 +30,12 @@ extern "C" {
 
 void Gameboy::refreshRomBank(int bank) 
 {
-    if (bank < romFile->getNumRomBanks()) {
-        romBank = bank;
-        romFile->loadRomBank(romBank); 
-        memory[0x4] = romFile->romSlot1;
-        memory[0x5] = romFile->romSlot1+0x1000;
-        memory[0x6] = romFile->romSlot1+0x2000;
-        memory[0x7] = romFile->romSlot1+0x3000; 
-    }
-    else
-        printLog("Tried to access bank %x\n", bank);
+    romBank = bank % romFile->getNumRomBanks();
+    romFile->loadRomBank(romBank); 
+    memory[0x4] = romFile->romSlot1;
+    memory[0x5] = romFile->romSlot1+0x1000;
+    memory[0x6] = romFile->romSlot1+0x2000;
+    memory[0x7] = romFile->romSlot1+0x3000;
 }
 
 void Gameboy::refreshRamBank (int bank) 
@@ -87,7 +83,7 @@ void Gameboy::initMMU()
     readFunc = mbcReads[romFile->getMBC()];
     writeFunc = mbcWrites[romFile->getMBC()];
 
-    /* Rockman8 by Yang Yang uses a silghtly different MBC1 variant */
+    /* Rockman8 by Yang Yang uses a slightly different MBC1 variant */
     rockmanMapper = !strcmp(romFile->getRomTitle(), "ROCKMAN 99");
 
     rumbleValue = 0;
